@@ -13,7 +13,9 @@ export class UserService {
   ) { }
   async create(createUserDto: CreateUserDto): Promise<User> {
     try {
+      console.log(createUserDto);
       const existingEmail = await this.findByEmail(createUserDto.email)
+      console.log(existingEmail);
       if (existingEmail) {
         throw new HttpException({
           status: HttpStatus.CONFLICT,
@@ -25,11 +27,14 @@ export class UserService {
       const hashedPassword = await bcrypt.hash(createUserDto.email, saltOrRounds)
       const user = await this.userRepository.create({
         email: createUserDto.email.toLocaleLowerCase(),
-        password: hashedPassword
+        password: hashedPassword,
+        username:createUserDto.username
       })
       return await this.userRepository.save(user)
     }
     catch (error) {
+      console.log(error);
+      
       throw new HttpException({
         status: HttpStatus.INTERNAL_SERVER_ERROR,
         message: error.message
@@ -39,6 +44,8 @@ export class UserService {
   }
   async findByEmail(email: string): Promise<User> {
     try {
+      console.log(email);
+      
       return await this.userRepository.findOneBy({ email })
     } catch (error) {
       throw new HttpException({

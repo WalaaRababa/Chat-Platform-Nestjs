@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
-import { AuthService } from '../../auth.service';
+import { AuthService } from '../auth.service';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -14,7 +14,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
       throw new HttpException(
         {
           status: HttpStatus.UNAUTHORIZED,
-          message: 'email or password are inncorrect',
+          message: 'email or password are incorrect',
         },
         HttpStatus.UNAUTHORIZED,
       );

@@ -15,13 +15,14 @@ import { UpdateUserDto } from './dto/update-user.dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    try {
-      return this.userService.create(createUserDto);
-    } catch (error) {}
-  }
-
+  @Post('login')
+  // async login(@Body() createUserDto: CreateUserDto) {
+  //   try {
+  //     return await this.userService.create(createUserDto);
+  //   } catch (error) {
+  //     throw new BadRequestException(error.message);
+  //   }
+  // }
   @Get()
   findAll() {
     return this.userService.findAll();

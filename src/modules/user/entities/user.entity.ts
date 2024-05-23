@@ -9,6 +9,8 @@ export class User {
   email: string;
   @Column({ length: 256 })
   password: string;
+  @Column()
+  username: string;
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 }
