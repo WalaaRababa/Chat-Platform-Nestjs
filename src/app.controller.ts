@@ -14,10 +14,7 @@ export class AppController {
   async register(@Body() createUserDto: CreateUserDto) {
     try {
       const user = await this.userService.create(createUserDto);
-      return await this.authservice.login({
-        email: createUserDto.email,
-        password: createUserDto.password,
-      });
+      return await this.authservice.login(user);
     } catch (error) {
       throw new HttpException(
         {
@@ -31,8 +28,14 @@ export class AppController {
   @UseGuards(AuthGuard('local'))
   @Post('login')
   async login(@Request() req) {
-    console.log(req.user);
-    
-    return this.authservice.login(req.user);
+try {
+  return this.authservice.login(req.user);
+
+} catch (error) {
+  console.log(error);
+  
+  throw error
+}
   }
+
 }

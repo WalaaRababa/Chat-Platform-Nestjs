@@ -24,7 +24,7 @@ export class UserService {
         })
       }
       const saltOrRounds = 10;
-      const hashedPassword = await bcrypt.hash(createUserDto.email, saltOrRounds)
+      const hashedPassword = await bcrypt.hash(createUserDto.password, saltOrRounds)
       const user = await this.userRepository.create({
         email: createUserDto.email.toLocaleLowerCase(),
         password: hashedPassword,
@@ -43,9 +43,7 @@ export class UserService {
     }
   }
   async findByEmail(email: string): Promise<User> {
-    try {
-      console.log(email);
-      
+    try {      
       return await this.userRepository.findOneBy({ email })
     } catch (error) {
       throw new HttpException({
@@ -56,19 +54,49 @@ export class UserService {
     }
   }
 
-findAll() {
-  return `This action returns all user`;
+async findAll() : Promise<User[]>{
+  try {
+   return await this.userRepository.find()
+  } catch (error) {
+    throw new HttpException({
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+      message: error.message
+    }, HttpStatus.INTERNAL_SERVER_ERROR)
+
+  
+  }
 }
 
-findOne(id: number) {
-  return `This action returns a #${id} user`;
+async findOne(id: number):Promise<User> {
+  try {
+    const user= await this.userRepository.findOneBy({id})
+if(user)
+  {return user}
+throw new HttpException('no user has this id',HttpStatus.BAD_REQUEST)
+  } catch (error) {
+    throw new HttpException({
+      status: HttpStatus.INTERNAL_SERVER_ERROR,
+      message: error.message
+    }, HttpStatus.INTERNAL_SERVER_ERROR)
+  }
 }
 
-update(id: number, updateUserDto: UpdateUserDto) {
-  return `This action updates a #${id} user`;
-}
+// update(id: number, updateUserDto: UpdateUserDto) {
+//   return `This action updates a #${id} user`;
+// }
 
 remove(id: number) {
   return `This action removes a #${id} user`;
+}
+async countUser():Promise<number>
+{
+  try {
+    const countOfUser=await this.userRepository.count()
+    if(countOfUser)
+    {return countOfUser}
+    throw new HttpException('no user yet',HttpStatus.BAD_REQUEST)
+  } catch (error) {
+    throw error 
+  }
 }
 }
