@@ -7,11 +7,14 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs'
 import { Post } from '../post/entities/post.entity';
+import { Friend } from '../friend/friend.entity';
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private userRepository: Repository<User>,
-    @InjectRepository(Post) private postRepository:Repository<Post>
+    @InjectRepository(Post) private postRepository:Repository<Post>,
+    @InjectRepository(Friend) private friendRepository:Repository<Friend>,
+
   ) { }
   async create(createUserDto: Partial<CreateUserDto>): Promise<User> {
     try {
@@ -60,7 +63,7 @@ export class UserService {
 
   async findAll(): Promise<User[]> {
     try {
-      return await this.userRepository.find({relations:['posts']})
+      return await this.userRepository.find({relations:['posts','sentFriendRequests','receivedFriendRequests']})
     } catch (error) {
       throw new HttpException({
         status: HttpStatus.INTERNAL_SERVER_ERROR,
@@ -73,8 +76,11 @@ export class UserService {
 
   async findOne(id: number): Promise<User> {
     try {
-      const user = await this.userRepository.findOneBy({ id })
-      if (user) { return user }
+      const user=await this.userRepository.findOne({
+        where: {userId:id},
+        relations: ['sentFriendRequests', 'receivedFriendRequests'],
+      });
+            if (user) { return user }
       throw new HttpException('no user has this id', HttpStatus.BAD_REQUEST)
     } catch (error) {
       throw new HttpException({

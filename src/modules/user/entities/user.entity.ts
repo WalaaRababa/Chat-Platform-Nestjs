@@ -1,4 +1,3 @@
-import { JoinColumn } from 'typeorm';
 // eslint-disable-next-line prettier/prettier
 import { Friend } from "src/modules/friend/friend.entity";
 import { Post } from 'src/modules/post/entities/post.entity';
@@ -14,7 +13,7 @@ import {
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  id: number;
+  userId: number;
   @Column({ unique: true })
   email: string;
   @Column({ length: 256 })

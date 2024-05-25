@@ -3,7 +3,6 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -11,7 +10,7 @@ import {
 @Entity()
 export class Post {
   @PrimaryGeneratedColumn()
-  id: number;
+  postId: number;
   @Column()
   content: string;
   @Column({ nullable: true })
@@ -22,6 +21,6 @@ export class Post {
   })
   createdAt: string;
   @ManyToOne(() => User, (user) => user.posts)
-  @JoinColumn({ name: 'id' })
+  @JoinColumn({ name: 'userId' })
   user: User;
 }

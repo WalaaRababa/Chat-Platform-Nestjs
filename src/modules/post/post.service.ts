@@ -17,37 +17,70 @@ export class PostService {
     userId: number,
   ): Promise<Post> {
     try {
-      const publisherPost = await this.userRepository.findOne({
-        where: { id: userId },
-        relations: ['posts'],
-      });
-
-      console.log(publisherPost);
-
       const post = this.postRepository.create({
-        content: createPostDto.content,
-        img: createPostDto.img,
-        user: { id: userId },
+        ...createPostDto,
+        user: { userId },
       });
+      // const publisherPost = await this.userRepository.findOne({
+      //   where: { userId },
+      //   relations: ['posts'],
+      // });
       // publisherPost.posts.push(post);
       // await this.userRepository.save(publisherPost);
       return this.postRepository.save(post);
     } catch (error) {
-      console.log(error);
-
       throw new HttpException(
-        'Error While Saving Post',
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          message: error.message,
+        },
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
 
-  findAll() {
-    return `This action returns all post`;
+  async findAll(): Promise<Post[]> {
+    try {
+      const posts = await this.postRepository
+        .createQueryBuilder('post')
+        .leftJoinAndSelect('post.user', 'user')
+        .select([
+          'post.postId',
+          'post.content',
+          'post.img',
+          'user.username',
+          'user.email',
+        ])
+        .getMany();
+      return posts;
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          message: error.message,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  async findOne(id: number): Promise<Post> {
+    try {
+      const post = await this.postRepository
+        .createQueryBuilder('post')
+        .leftJoinAndSelect('post.user', 'user')
+        .where('post.postId=:id', { id })
+        .getOne();
+      return post;
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.INTERNAL_SERVER_ERROR,
+          message: error.message,
+        },
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   update(id: number, updatePostDto: UpdatePostDto) {
