@@ -7,6 +7,11 @@ import { AuthModule } from './modules/auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './modules/user/entities/user.entity';
+import { ProfileModule } from './modules/profile/profile.module';
+import { FriendModule } from './modules/friend/friend.module';
+import { Profile } from './modules/profile/entities/profile.entity';
+import { Post } from './modules/post/entities/post.entity';
+import { Friend } from './modules/friend/friend.entity';
 
 @Module({
   imports: [
@@ -21,9 +26,11 @@ import { User } from './modules/user/entities/user.entity';
       username: process.env.DB_Username,
       password: process.env.DB_password,
       database: process.env.DB_database,
-      entities: [User],
+      entities: [User, Profile, Post, Friend],
       synchronize: true,
     }),
+    ProfileModule,
+    FriendModule,
   ],
   controllers: [AppController],
   providers: [AppService],
