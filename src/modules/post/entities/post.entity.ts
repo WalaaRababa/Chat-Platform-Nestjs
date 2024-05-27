@@ -21,6 +21,6 @@ export class Post {
   })
   createdAt: string;
   @ManyToOne(() => User, (user) => user.posts)
-  @JoinColumn({ name: 'userId' })
+  // @JoinColumn({ name: 'userId' })
   user: User;
 }

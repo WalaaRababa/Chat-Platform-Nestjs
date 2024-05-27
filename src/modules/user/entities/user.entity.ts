@@ -5,6 +5,8 @@ import { Profile } from 'src/modules/profile/entities/profile.entity';
 import {
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -26,6 +28,9 @@ export class User {
   profile?: Profile;
   @OneToMany(() => Post, (post) => post.user, { cascade: true })
   posts: Post[];
+  @ManyToMany(() => User, (user) => user.friends)
+  @JoinTable()
+  friends: User[];
   @OneToMany(() => Friend, (friend) => friend.requester, { cascade: true })
   sentFriendRequests: Friend[];
   @OneToMany(() => Friend, (friend) => friend.receiver, { cascade: true })
