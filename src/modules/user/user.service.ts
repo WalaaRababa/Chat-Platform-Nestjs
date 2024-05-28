@@ -63,7 +63,7 @@ export class UserService {
 
   async findAll(): Promise<User[]> {
     try {
-      return await this.userRepository.find({relations:['posts','sentFriendRequests','receivedFriendRequests','friends']})
+      return await this.userRepository.find({relations:['posts','sentFriendRequests','receivedFriendRequests','friends','messages','conversations']})
     } catch (error) {
       throw new HttpException({
         status: HttpStatus.INTERNAL_SERVER_ERROR,

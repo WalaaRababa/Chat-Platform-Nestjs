@@ -20,21 +20,21 @@ import { FileInterceptor } from '@nestjs/platform-express';
 export class PostController {
   constructor(private readonly postService: PostService) {}
   @UseGuards(AuthGuard('jwt'))
-  @UseInterceptors(
-    FileInterceptor('image', {
-      storage: diskStorage({
-        destination: './uploads',
-        filename: (req, file, cb) => {
-          //   cb(null,Date.now() + '-' + file.originalname);
-          // Rename the file to include the timestamp
-          let date = Date.now();
-          let fl = date + '.' + file.mimetype.split('/')[1];
-          redirect(null, fl);
-          cb(null, Date.now() + '-' + file.originalname);
-        },
-      }),
-    }),
-  )
+  // @UseInterceptors(
+  //   FileInterceptor('image', {
+  //     storage: diskStorage({
+  //       destination: './uploads',
+  //       filename: (req, file, cb) => {
+  //         //   cb(null,Date.now() + '-' + file.originalname);
+  //         // Rename the file to include the timestamp
+  //         const date = Date.now();
+  //         const fl = date + '.' + file.mimetype.split('/')[1];
+  //         redirect(null, fl);
+  //         cb(null, Date.now() + '-' + file.originalname);
+  //       },
+  //     }),
+  //   }),
+  // )
   @Post()
   create(@Body() createPostDto: CreatePostDto, @Req() req) {
     return this.postService.create(createPostDto, req.user.userId);

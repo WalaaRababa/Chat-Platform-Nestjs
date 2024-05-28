@@ -1,5 +1,7 @@
 // eslint-disable-next-line prettier/prettier
-import { Friend } from "src/modules/friend/friend.entity";
+import { Conversation } from "src/modules/chat/entities/conversation.entity";
+import { Message } from 'src/modules/chat/entities/message.entity';
+import { Friend } from 'src/modules/friend/friend.entity';
 import { Post } from 'src/modules/post/entities/post.entity';
 import { Profile } from 'src/modules/profile/entities/profile.entity';
 import {
@@ -35,4 +37,9 @@ export class User {
   sentFriendRequests: Friend[];
   @OneToMany(() => Friend, (friend) => friend.receiver, { cascade: true })
   receivedFriendRequests: Friend[];
+  @OneToMany(() => Message, (message) => message.user)
+  messages: Message[];
+  @ManyToMany(() => Conversation, (conversation) => conversation.users)
+  @JoinTable()
+  conversations: Conversation[];
 }

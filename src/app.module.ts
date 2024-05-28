@@ -12,6 +12,9 @@ import { FriendModule } from './modules/friend/friend.module';
 import { Profile } from './modules/profile/entities/profile.entity';
 import { Post } from './modules/post/entities/post.entity';
 import { Friend } from './modules/friend/friend.entity';
+import { ChatModule } from './modules/chat/chat.module';
+import { Conversation } from './modules/chat/entities/conversation.entity';
+import { Message } from './modules/chat/entities/message.entity';
 
 @Module({
   imports: [
@@ -26,11 +29,12 @@ import { Friend } from './modules/friend/friend.entity';
       username: process.env.DB_Username,
       password: process.env.DB_password,
       database: process.env.DB_database,
-      entities: [User, Profile, Post, Friend],
+      entities: [User, Profile, Post, Friend, Conversation, Message],
       synchronize: true,
     }),
     ProfileModule,
     FriendModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],
